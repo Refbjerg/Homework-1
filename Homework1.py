@@ -19,27 +19,38 @@ class Homework1(unittest.TestCase):
         wd = self.wd
         self.open_homepage(wd)
         #login
-        self.login(wd, "Admin", "secret")
-        self.group_creation(wd)
+        self.login(wd, username="Admin", password="secret")
+        self.group_creation(wd, name="Group-1", header="Groupleader", footer="Groupfooter")
         self.Submit_group(wd)
         self.assertTrue(success)
+
+    def test_Homework1_empty(self):
+        success = True
+        wd = self.wd
+        self.open_homepage(wd)
+        #login
+        self.login(wd, username="", password="")
+        self.group_creation(wd, name="", header="", footer="")
+        self.Submit_group(wd)
+        self.assertTrue(success)
+
 
     def Submit_group(self, wd):
         # submit group creation
         wd.find_element_by_name("submit").click()
 
-    def group_creation(self, wd):
+    def group_creation(self, wd, name, header, footer):
         # group creation
         wd.find_element_by_name("new").click()
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys("Group-1")
+        wd.find_element_by_name("group_name").send_keys(name)
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys("Groupleader")
+        wd.find_element_by_name("group_header").send_keys(header)
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys("Groupfooter")
+        wd.find_element_by_name("group_footer").send_keys(footer)
 
     def login(self, wd, username, password):
         wd.find_element_by_name("user").click()
