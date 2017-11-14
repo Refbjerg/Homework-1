@@ -2,6 +2,7 @@
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time, unittest
+from contact import Contact
 
 def is_alert_present(wd):
     try:
@@ -20,44 +21,55 @@ class addcontact(unittest.TestCase):
         wd = self.wd
         self.open_home_page(wd)
         self.Login(wd, username="admin", password="secret")
-        self.Add_new_contact(wd, first_name="Oleg", middlename="Leonidovich", lastname="Balashevich",
+        self.Add_new_contact(wd, Contact(first_name="Oleg", middlename="Leonidovich", lastname="Balashevich",
                              address="Saint-Petersburg, Ligovskiy prospect 235,apt 34", mobile="+9627275922", mail="wooler@bk.ru",
                              day="//div[@id='content']/form/select[1]//option[5]",
-                             month="//div[@id='content']/form/select[2]//option[6]", year="1986")
+                             month="//div[@id='content']/form/select[2]//option[6]", year="1986"))
+        self.Logout(wd)
+
+    def test_addcontact_empty(self):
+        success = True
+        wd = self.wd
+        self.open_home_page(wd)
+        self.Login(wd, username="admin", password="secret")
+        self.Add_new_contact(wd, Contact(first_name="", middlename="", lastname="",
+                             address="", mobile="", mail="",
+                             day="",
+                             month="", year=""))
         self.Logout(wd)
 
     def Logout(self, wd):
         wd.find_element_by_link_text("Logout").click()
 
-    def Add_new_contact(self, wd, first_name, middlename, lastname, address, mobile, mail, day, month, year):
+    def Add_new_contact(self, wd, contact):
         # init add new contact
         wd.find_element_by_link_text("add new").click()
         # fill contact form
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(first_name)
+        wd.find_element_by_name("firstname").send_keys(contact.first_name)
         wd.find_element_by_name("middlename").click()
         wd.find_element_by_name("middlename").clear()
-        wd.find_element_by_name("middlename").send_keys(middlename)
+        wd.find_element_by_name("middlename").send_keys(contact.middlename)
         wd.find_element_by_name("lastname").click()
         wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(lastname)
+        wd.find_element_by_name("lastname").send_keys(contact.lastname)
         wd.find_element_by_name("address").click()
         wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(address)
+        wd.find_element_by_name("address").send_keys(contact.address)
         wd.find_element_by_name("mobile").click()
         wd.find_element_by_name("mobile").clear()
-        wd.find_element_by_name("mobile").send_keys(mobile)
+        wd.find_element_by_name("mobile").send_keys(contact.mobile)
         wd.find_element_by_name("email").click()
         wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(mail)
-        if not wd.find_element_by_xpath(day).is_selected():
-            wd.find_element_by_xpath(day).click()
-        if not wd.find_element_by_xpath(month).is_selected():
-            wd.find_element_by_xpath(month).click()
+        wd.find_element_by_name("email").send_keys(contact.mail)
+        if not wd.find_element_by_xpath(contact.day).is_selected():
+            wd.find_element_by_xpath(contact.day).click()
+        if not wd.find_element_by_xpath(contact.month).is_selected():
+            wd.find_element_by_xpath(contact.month).click()
         wd.find_element_by_name("byear").click()
         wd.find_element_by_name("byear").clear()
-        wd.find_element_by_name("byear").send_keys(year)
+        wd.find_element_by_name("byear").send_keys(contact.year)
         # submit
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
