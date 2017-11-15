@@ -15,15 +15,15 @@ def app(request):
 def test_Homework1(app):
         success = True
         app.session.login(username="Admin", password="secret")
-        app.group_creation(Group(name="Group-1", header="Groupleader", footer="Groupfooter"))
-        app.Submit_group()
+        app.group.create(Group(name="Group-1", header="Groupleader", footer="Groupfooter"))
+        app.group.Submit_group()
 
 
 def test_Homework1_empty(app):
         success = True
         app.session.login(username="admin", password="secret")
-        app.group_creation(Group(name="", header="", footer=""))
-        app.Submit_group()
+        app.group.create(Group(name="", header="", footer=""))
+        app.group.Submit_group()
 
 
 if __name__ == '__main__':
