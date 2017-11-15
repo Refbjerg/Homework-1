@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from application import Application
+from fixture.application import Application
 from model.group import Group
 
 
@@ -14,14 +14,14 @@ def app(request):
 
 def test_Homework1(app):
         success = True
-        app.login(username="Admin", password="secret")
+        app.session.login(username="Admin", password="secret")
         app.group_creation(Group(name="Group-1", header="Groupleader", footer="Groupfooter"))
         app.Submit_group()
 
 
 def test_Homework1_empty(app):
         success = True
-        app.login(username="admin", password="secret")
+        app.session.login(username="admin", password="secret")
         app.group_creation(Group(name="", header="", footer=""))
         app.Submit_group()
 
