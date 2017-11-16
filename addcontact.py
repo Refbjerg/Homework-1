@@ -1,93 +1,37 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
-import time, unittest
+import pytest
+from application_contacts import Application_contacts
+import pytest
 from contact import Contact
 
-def is_alert_present(wd):
-    try:
-        wd.switch_to_alert().text
-        return True
-    except:
-        return False
 
-class addcontact(unittest.TestCase):
-    def setUp(self):
-        self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
-    
-    def test_addcontact(self):
+
+@pytest.fixture
+def app(request):
+        fixture = Application_contacts()
+        request.addfinalizer(fixture.Destroy)
+        return fixture
+
+def test_addcontact(app):
         success = True
-        wd = self.wd
-        self.open_home_page(wd)
-        self.Login(wd, username="admin", password="secret")
-        self.Add_new_contact(wd, Contact(first_name="Oleg", middlename="Leonidovich", lastname="Balashevich",
+        app.open_home_page()
+        app.Login(username="admin", password="secret")
+        app.Add_new_contact(Contact(first_name="Oleg", middlename="Leonidovich", lastname="Balashevich",
                              address="Saint-Petersburg, Ligovskiy prospect 235,apt 34", mobile="+9627275922", mail="wooler@bk.ru",
                              day="//div[@id='content']/form/select[1]//option[5]",
                              month="//div[@id='content']/form/select[2]//option[6]", year="1986"))
-        self.Logout(wd)
+        app.Logout()
 
-    def test_addcontact_empty(self):
+def test_addcontact_empty(app):
         success = True
-        wd = self.wd
-        self.open_home_page(wd)
-        self.Login(wd, username="admin", password="secret")
-        self.Add_new_contact(wd, Contact(first_name="", middlename="", lastname="",
+        app.open_home_page()
+        app.Login(username="admin", password="secret")
+        app.Add_new_contact(Contact(first_name="", middlename="", lastname="",
                              address="", mobile="", mail="",
-                             day="",
-                             month="", year=""))
-        self.Logout(wd)
+                             day="//div[@id='content']/form/select[1]//option[5]",
+                             month="//div[@id='content']/form/select[2]//option[6]", year="1986"))
+        app.Logout()
 
-    def Logout(self, wd):
-        wd.find_element_by_link_text("Logout").click()
 
-    def Add_new_contact(self, wd, contact):
-        # init add new contact
-        wd.find_element_by_link_text("add new").click()
-        # fill contact form
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.first_name)
-        wd.find_element_by_name("middlename").click()
-        wd.find_element_by_name("middlename").clear()
-        wd.find_element_by_name("middlename").send_keys(contact.middlename)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(contact.lastname)
-        wd.find_element_by_name("address").click()
-        wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(contact.address)
-        wd.find_element_by_name("mobile").click()
-        wd.find_element_by_name("mobile").clear()
-        wd.find_element_by_name("mobile").send_keys(contact.mobile)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(contact.mail)
-        if not wd.find_element_by_xpath(contact.day).is_selected():
-            wd.find_element_by_xpath(contact.day).click()
-        if not wd.find_element_by_xpath(contact.month).is_selected():
-            wd.find_element_by_xpath(contact.month).click()
-        wd.find_element_by_name("byear").click()
-        wd.find_element_by_name("byear").clear()
-        wd.find_element_by_name("byear").send_keys(contact.year)
-        # submit
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
-    def Login(self, wd, username, password):
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
-
-    def open_home_page(self, wd):
-
-        wd.get("http://localhost/addressbook/delete.php?part=3;4;")
-
-    def tearDown(self):
-        self.wd.quit()
-
-if __name__ == '__main__':
-    unittest.main()
