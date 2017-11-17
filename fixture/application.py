@@ -13,7 +13,7 @@ class Application:
 
 
 
-    def open_homepage(self):
+    def open_home_page(self):
         wd = self.wd
         # open_homepage
         wd.get("http://localhost/addressbook/group.php")
