@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.common.action_chains import ActionChains
 import pytest
-from application_contacts import Application_contacts
-import pytest
-from contact import Contact
 
+from fixture.application_contacts import Application_contacts
+from model.contact import Contact
 
 
 @pytest.fixture
